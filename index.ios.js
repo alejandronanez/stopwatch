@@ -10,7 +10,9 @@ import formatTime from 'minutes-seconds-milliseconds';
 const StopWatch = React.createClass({
     getInitialState() {
         return {
+            laps: [],
             running: false,
+            startTime: null,
             timeElapsed: null
         }
     },
@@ -21,21 +23,39 @@ const StopWatch = React.createClass({
             return;
         }
 
-        let startTime = new Date();
+        this.setState({startTime: new Date()});
 
         this.interval = setInterval(() => {
             this.setState({
                 running: true,
-                timeElapsed: new Date() - startTime
+                timeElapsed: new Date() - this.state.startTime
             });
         }, 30);
     },
+    handleLapPress() {
+        const lap = this.state.timeElapsed;
+
+        this.setState({
+            startTime: new Date(),
+            laps: this.state.laps.concat(lap)
+        });
+    },
     lapButton() {
         return (
-            <View style={styles.button}>
+            <TouchableHighlight
+                onPress={this.handleLapPress}
+                style={styles.button}
+                underlayColor="gray"
+            >
                 <Text>Lap</Text>
-            </View>
+            </TouchableHighlight>
         );
+    },
+    lapsList() {
+        return this.state.laps.map((lap, i) => {
+            const lapInfo = `${i + 1}. ${formatTime(lap)}`;
+            return <Text key={i}>{lapInfo}</Text>;
+        });
     },
     startStopButton() {
         const buttonText = this.state.running ? 'Stop' : 'Start';
@@ -43,9 +63,9 @@ const StopWatch = React.createClass({
 
         return (
             <TouchableHighlight
-                underlayColor="gray"
                 onPress={this.handleStartPress}
                 style={[styles.button, style]}
+                underlayColor="gray"
             >
                 <Text>{buttonText}</Text>
             </TouchableHighlight>
@@ -68,7 +88,7 @@ const StopWatch = React.createClass({
 
                 {/* footer */}
                 <View style={styles.footer}>
-                    <Text>I am a list of laps</Text>
+                    {this.lapsList()}
                 </View>
                 {/* footer */}
             </View>
