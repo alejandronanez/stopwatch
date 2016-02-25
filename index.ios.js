@@ -10,14 +10,22 @@ import formatTime from 'minutes-seconds-milliseconds';
 const StopWatch = React.createClass({
     getInitialState() {
         return {
+            running: false,
             timeElapsed: null
         }
     },
     handleStartPress() {
+        if (this.state.running) {
+            clearInterval(this.interval);
+            this.setState({running: false});
+            return;
+        }
+
         let startTime = new Date();
 
-        setInterval(() => {
+        this.interval = setInterval(() => {
             this.setState({
+                running: true,
                 timeElapsed: new Date() - startTime
             });
         }, 30);
@@ -30,13 +38,15 @@ const StopWatch = React.createClass({
         );
     },
     startStopButton() {
+        const buttonText = this.state.running ? 'Stop' : 'Start';
+        
         return (
             <TouchableHighlight
                 underlayColor="gray"
                 onPress={this.handleStartPress}
                 style={[styles.button, styles.startButton]}
             >
-                <Text>Start</Text>
+                <Text>{buttonText}</Text>
             </TouchableHighlight>
         );
     },
