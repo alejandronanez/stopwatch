@@ -22,15 +22,6 @@ const StopWatch = React.createClass({
             });
         }, 30);
     },
-    /**
-     * Easy to identify components - DEV ONLY
-     */
-    border(color) {
-        return {
-            borderColor: color,
-            borderWidth: 4
-        }
-    },
     lapButton() {
         return (
             <View style={styles.button}>
@@ -53,11 +44,11 @@ const StopWatch = React.createClass({
         return (
             <View style={styles.container}>{/* container*/}
                 {/* header */}
-                <View style={[styles.header, this.border('yellow')]}>
-                    <View style={[styles.timerWrapper, this.border('red')]}>
+                <View style={styles.header}>
+                    <View style={styles.timerWrapper}>
                         <Text style={styles.timer}>{formatTime(this.state.timeElapsed)}</Text>
                     </View>
-                    <View style={[styles.buttonWrapper, this.border('green')]}>
+                    <View style={styles.buttonWrapper}>
                         {this.startStopButton()}
                         {this.lapButton()}
                     </View>
@@ -65,7 +56,7 @@ const StopWatch = React.createClass({
                 {/* /header */}
 
                 {/* footer */}
-                <View style={[styles.footer, this.border('blue')]}>
+                <View style={styles.footer}>
                     <Text>I am a list of laps</Text>
                 </View>
                 {/* footer */}
